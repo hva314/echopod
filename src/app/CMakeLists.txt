@@ -13,6 +13,7 @@ add_library(echo_app STATIC
     diagnostics_rows.c
     $<IF:$<BOOL:${ECHO_RELEASE}>,diagnostics_menu_release.c,diagnostics_menu.c>
     draw_profile.c
+    $<IF:$<BOOL:${CMAKE_CROSSCOMPILING}>,doom_launch_none.c,doom_launch.c>
     equalizer_files.c
     equalizer_store.c
     folders_store.c
@@ -42,7 +43,7 @@ add_library(echo_app STATIC
 )
 target_include_directories(echo_app PUBLIC include PRIVATE .)
 if(CMAKE_CROSSCOMPILING)
-    target_compile_definitions(echo_app PRIVATE ECHO_RESIDENT_TABLES ECHO_EQ_FILES_HIDDEN)
+    target_compile_definitions(echo_app PRIVATE ECHO_RESIDENT_TABLES ECHO_EQ_FILES_HIDDEN ECHO_DOOM_HIDDEN)
 endif()
 target_link_libraries(echo_app
     PUBLIC echo_core echo_gfx echo_ui echo_fonts echo_library echo_playback echo_np_faces echo_settings echo_sound echo_hal

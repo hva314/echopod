@@ -221,14 +221,13 @@ static void build_home(AppScreens *screens, AppScreensContext context)
         app_screens_open_item(i18n_text(STR_RESCAN_MUSIC_TITLE), &screens->music.screen);
     screens->home_items[1] = shelf_item(screens, context, SPOKEN_AUDIOBOOK);
     screens->home_items[2] = shelf_item(screens, context, SPOKEN_PODCAST);
-    screens->home_items[3] =
-        app_screens_open_item(i18n_text(STR_MENU_SETTINGS), &screens->settings.menu.screen);
-    screens->home_items[4] =
-        app_screens_open_item(i18n_text(STR_DIAG_TITLE), &screens->diagnostics.screen);
-    screens->home_items[5] =
-        app_screens_open_item(i18n_text(STR_MENU_NOW_PLAYING), &screens->now_playing.screen);
-    screens->home_items[5].shown = player_has_track;
-    screens->home_items[5].shown_context = context.player;
+    MenuItem *rest =
+        &screens->home_items[3 + doom_launch_add(&screens->home_items[3], context.player)];
+    rest[0] = app_screens_open_item(i18n_text(STR_MENU_SETTINGS), &screens->settings.menu.screen);
+    rest[1] = app_screens_open_item(i18n_text(STR_DIAG_TITLE), &screens->diagnostics.screen);
+    rest[2] = app_screens_open_item(i18n_text(STR_MENU_NOW_PLAYING), &screens->now_playing.screen);
+    rest[2].shown = player_has_track;
+    rest[2].shown_context = context.player;
     home_art_init(&screens->home_art, context.covers, context.store, context.player, theme);
     screens->home_art.notice = hal_storage_card_ready() ? NULL : i18n_text(STR_MENU_NO_CARD);
     MenuConfig home = {.title = "EchoPod",

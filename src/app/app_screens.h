@@ -6,6 +6,7 @@
 #include "core/power_policy.h"
 #include "cover_cache.h"
 #include "diagnostics_values.h"
+#include "doom_launch.h"
 #include "favorites_store.h"
 #include "hal/audio.h"
 #include "home_art.h"
@@ -26,7 +27,7 @@
 #include "ui/toast.h"
 
 enum {
-    HOME_ITEM_COUNT = 6,
+    HOME_ITEM_COUNT = 6 + DOOM_LAUNCH_ROWS,
     SHELF_COUNT = 2,
     MUSIC_ITEM_COUNT = 9,
     DIAGNOSTICS_ITEM_COUNT = 23,

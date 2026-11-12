@@ -463,6 +463,44 @@ static void lists_still_move_as_soon_as_a_volume_key_goes_down(void)
     CHECK(!title_is("Back In Black"));
 }
 
+static void without_the_doom_program_home_has_no_doom_row(void)
+{
+    start_app();
+    move_down(1);
+    tap(KEY_PLAY);
+    CHECK(title_is("Settings"));
+    CHECK_EQUAL(0, fake_hal_doom_run_count());
+}
+
+static void start_app_with_library_and_doom(void)
+{
+    start_app_with_library();
+    fake_hal_set_doom_ready(true);
+    restart_app();
+}
+
+static void selecting_doom_pauses_the_music_and_starts_the_program(void)
+{
+    start_app_with_library_and_doom();
+    play_first_album_track();
+    hold_back();
+    move_down(1);
+    tap(KEY_PLAY);
+    CHECK_EQUAL(1, fake_hal_doom_run_count());
+    CHECK(fake_hal_doom_ran_paused());
+    CHECK_EQUAL(PLAYER_PAUSED, app_player_status().state);
+    CHECK(title_is("EchoPod"));
+}
+
+static void the_doom_row_sits_above_settings(void)
+{
+    start_app_with_library_and_doom();
+    move_down(2);
+    tap(KEY_PLAY);
+    CHECK(title_is("Settings"));
+    CHECK_EQUAL(0, fake_hal_doom_run_count());
+}
+
 enum {
     HOME_ART_CYCLE_MS = 5000
 };
@@ -3491,6 +3529,9 @@ int main(void)
         TEST_CASE(now_playing_without_a_cover_keeps_the_text_layout),
         TEST_CASE(now_playing_keys_control_the_player),
         TEST_CASE(lists_still_move_as_soon_as_a_volume_key_goes_down),
+        TEST_CASE(without_the_doom_program_home_has_no_doom_row),
+        TEST_CASE(selecting_doom_pauses_the_music_and_starts_the_program),
+        TEST_CASE(the_doom_row_sits_above_settings),
         TEST_CASE(the_home_menu_shows_now_playing_last_once_a_track_is_loaded),
         TEST_CASE(the_home_menu_hides_now_playing_with_nothing_loaded),
         TEST_CASE(home_art_shows_a_library_cover_when_idle),
