@@ -6,6 +6,7 @@
 #include "hal/bluetooth.h"
 #include "hal/clock.h"
 #include "hal/display.h"
+#include "hal/doom.h"
 #include "hal/input.h"
 #include "hal/language.h"
 #include "hal/power.h"
@@ -98,6 +99,9 @@ typedef struct FakeHal {
     FakeFile files[FILE_CAPACITY];
     int file_count;
     FakeAudio audio;
+    bool doom_ready;
+    int doom_runs;
+    bool doom_ran_paused;
     WrittenFile written[FILE_CAPACITY];
     int write_count;
     uint32_t clock_mhz;
@@ -160,6 +164,32 @@ typedef struct FakeHal {
 } FakeHal;
 
 static FakeHal fake;
+
+void fake_hal_set_doom_ready(bool ready)
+{
+    fake.doom_ready = ready;
+}
+
+int fake_hal_doom_run_count(void)
+{
+    return fake.doom_runs;
+}
+
+bool fake_hal_doom_ran_paused(void)
+{
+    return fake.doom_ran_paused;
+}
+
+bool hal_doom_ready(void)
+{
+    return fake.doom_ready;
+}
+
+void hal_doom_run(void)
+{
+    fake.doom_runs++;
+    fake.doom_ran_paused = fake.audio.status.state != HAL_AUDIO_PLAYING;
+}
 
 void fake_hal_reset(void)
 {

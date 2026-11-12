@@ -87,6 +87,18 @@ void sim_display_set_title(const char *title)
     }
 }
 
+void sim_display_set_visible(bool visible)
+{
+    if (display.window == NULL) {
+        return;
+    }
+    if (visible) {
+        SDL_ShowWindow(display.window);
+        return;
+    }
+    SDL_HideWindow(display.window);
+}
+
 bool sim_display_save_bmp(const char *path)
 {
     SDL_Surface *frame =

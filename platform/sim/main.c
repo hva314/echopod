@@ -9,6 +9,7 @@
 #include "sim_audio.h"
 #include "sim_clock.h"
 #include "sim_display.h"
+#include "sim_doom.h"
 #include "sim_glyphs.h"
 #include "sim_input.h"
 #include "sim_options.h"
@@ -203,6 +204,7 @@ int main(int argument_count, char **arguments)
         sim_time_start_on(session.options.clock_year, session.options.clock_month,
                           session.options.clock_day);
     }
+    sim_doom_configure(&session.options);
     sim_glyphs_attach();
     app_start();
     app_show_splash();

@@ -13,6 +13,9 @@
 #include "hal/time.h"
 
 void fake_hal_reset(void);
+void fake_hal_set_doom_ready(bool ready);
+int fake_hal_doom_run_count(void);
+bool fake_hal_doom_ran_paused(void);
 void fake_hal_set_version(const char *version);
 void fake_hal_set_build_day(uint32_t day);
 void fake_hal_add_file(const char *path, const uint8_t *bytes, uint32_t size);
