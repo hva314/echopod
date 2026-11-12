@@ -49,6 +49,8 @@
 #include "m_controls.h"
 #include "p_saveg.h"
 
+#include "doom/doom_port.h"
+
 #include "s_sound.h"
 
 #include "doomstat.h"
@@ -649,17 +651,7 @@ void M_SaveSelect(int choice)
 //
 void M_SaveGame (int choice)
 {
-    if (!usergame)
-    {
-	M_StartMessage(DEH_String(SAVEDEAD),NULL,false);
-	return;
-    }
-	
-    if (gamestate != GS_LEVEL)
-	return;
-	
-    M_SetupNextMenu(&SaveDef);
-    M_ReadSaveStrings();
+    M_StartMessage(DOOM_PORT_SAVE_UNAVAILABLE, NULL, false);
 }
 
 
@@ -2123,3 +2115,16 @@ void M_Init (void)
     //opldev = M_CheckParm("-opldev") > 0;
 }
 
+
+int doom_port_menu_state(void)
+{
+    if (messageToPrint && messageNeedsInput)
+    {
+        return DOOM_PORT_MENU_PROMPT;
+    }
+    if (!menuactive)
+    {
+        return DOOM_PORT_MENU_CLOSED;
+    }
+    return currentMenu->prevMenu == NULL ? DOOM_PORT_MENU_TOP : DOOM_PORT_MENU_INNER;
+}

@@ -48,6 +48,8 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
+#include "doom/doom_port.h"
+
 //
 // Create a directory
 //
@@ -65,22 +67,7 @@ void M_MakeDirectory(char *path)
 
 boolean M_FileExists(char *filename)
 {
-    FILE *fstream;
-
-    fstream = fopen(filename, "r");
-
-    if (fstream != NULL)
-    {
-        fclose(fstream);
-        return true;
-    }
-    else
-    {
-        // If we can't open because the file is a directory, the 
-        // "file" exists at least!
-
-        return errno == EISDIR;
-    }
+    return doom_port_file_exists(filename) ? true : false;
 }
 
 //

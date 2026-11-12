@@ -48,6 +48,8 @@
 
 #include "i_system.h"
 
+#include "doom/doom_port.h"
+
 #include "w_wad.h"
 #include "z_zone.h"
 
@@ -132,35 +134,7 @@ static byte *AutoAllocMemory(int *size, int default_ram, int min_ram)
 
 byte *I_ZoneBase (int *size)
 {
-    byte *zonemem;
-    int min_ram, default_ram;
-    int p;
-
-    //!
-    // @arg <mb>
-    //
-    // Specify the heap size, in MiB (default 16).
-    //
-
-    p = M_CheckParmWithArgs("-mb", 1);
-
-    if (p > 0)
-    {
-        default_ram = atoi(myargv[p+1]);
-        min_ram = default_ram;
-    }
-    else
-    {
-        default_ram = DEFAULT_RAM;
-        min_ram = MIN_RAM;
-    }
-
-    zonemem = AutoAllocMemory(size, default_ram, min_ram);
-
-    printf("zone memory: %p, %x allocated for zone\n", 
-           zonemem, *size);
-
-    return zonemem;
+    return doom_port_zone(size);
 }
 
 void I_PrintBanner(char *msg)
@@ -245,23 +219,7 @@ void I_BindVariables(void)
 
 void I_Quit (void)
 {
-    atexit_listentry_t *entry;
-
-    // Run through all exit functions
- 
-    entry = exit_funcs; 
-
-    while (entry != NULL)
-    {
-        entry->func();
-        entry = entry->next;
-    }
-
-#if ORIGCODE
-    SDL_Quit();
-
-    exit(0);
-#endif
+    doom_port_exit(0);
 }
 
 #if !defined(_WIN32) && !defined(__MACOSX__) && !defined(__DJGPP__)
@@ -403,71 +361,7 @@ void I_Error (char *error, ...)
         entry = entry->next;
     }
 
-    exit_gui_popup = !M_ParmExists("-nogui");
-
-    // Pop up a GUI dialog box to show the error message, if the
-    // game was not run from the console (and the user will
-    // therefore be unable to otherwise see the message).
-    if (exit_gui_popup && !I_ConsoleStdout())
-#ifdef _WIN32
-    {
-        wchar_t wmsgbuf[512];
-
-        MultiByteToWideChar(CP_ACP, 0,
-                            msgbuf, strlen(msgbuf) + 1,
-                            wmsgbuf, sizeof(wmsgbuf));
-
-        MessageBoxW(NULL, wmsgbuf, L"", MB_OK);
-    }
-#elif defined(__MACOSX__)
-    {
-        CFStringRef message;
-	int i;
-
-	// The CoreFoundation message box wraps text lines, so replace
-	// newline characters with spaces so that multiline messages
-	// are continuous.
-
-	for (i = 0; msgbuf[i] != '\0'; ++i)
-        {
-            if (msgbuf[i] == '\n')
-            {
-                msgbuf[i] = ' ';
-            }
-        }
-
-        message = CFStringCreateWithCString(NULL, msgbuf,
-                                            kCFStringEncodingUTF8);
-
-        CFUserNotificationDisplayNotice(0,
-                                        kCFUserNotificationCautionAlertLevel,
-                                        NULL,
-                                        NULL,
-                                        NULL,
-                                        CFSTR(PACKAGE_STRING),
-                                        message,
-                                        NULL);
-    }
-#elif defined(__DJGPP__)
-    {
-        printf("%s\n", msgbuf);
-        exit(-1);
-    }
-
-#else
-    {
-        ZenityErrorBox(msgbuf);
-    }
-#endif
-
-    // abort();
-#if ORIGCODE
-    SDL_Quit();
-
-    exit(-1);
-#else
-    exit(-1);
-#endif
+    doom_port_exit(-1);
 }
 
 //

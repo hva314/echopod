@@ -18,6 +18,8 @@ option(ECHO_BUILD_TESTS "Build the host tests" ON)
 option(ECHO_BUILD_DEVICE "Build the device firmware with cmake/arm-none-eabi.cmake" OFF)
 option(ECHO_RELEASE "Leave the developer-only Diagnostics rows out of the build" OFF)
 set(ECHO_APP_RAM_BUDGET_BYTES 131072 CACHE STRING "Static RAM budget for src/ on the device")
+set(ECHO_DOOM_ZONE_KB 2048 CACHE STRING "Static zone memory for the DOOM program, in KB")
+set(ECHO_DOOM_ARENA_KB 192 CACHE STRING "Static arena for the DOOM engine's other allocations, in KB")
 
 include(cmake/project_options.cmake)
 
@@ -26,6 +28,10 @@ add_subdirectory(platform/device/logic)
 
 if(ECHO_BUILD_SIM)
     add_subdirectory(platform/sim)
+endif()
+
+if(NOT CMAKE_CROSSCOMPILING)
+    add_subdirectory(platform/doom)
 endif()
 
 if(ECHO_BUILD_DEVICE)

@@ -294,6 +294,23 @@ foreach(device_test audio_math backlight image_date battery_gauge watchdog panic
     )
 endforeach()
 
+foreach(doom_test doom_controls doom_frame doom_wad)
+    echo_add_unit_test(NAME test_${doom_test}
+        SOURCES doom/test_${doom_test}.c
+        LIBRARIES echo_doom_logic
+    )
+endforeach()
+
+if(TARGET echo_doom AND ECHO_DOOM_CARD)
+    add_test(NAME doom_plays_headless
+        COMMAND echo_doom --headless --card ${ECHO_DOOM_CARD} --frames 240
+            --keys play,play,play,play,menu,down:long,play:long,power
+    )
+    set_tests_properties(doom_plays_headless PROPERTIES
+        FAIL_REGULAR_EXPRESSION "Z_Malloc: failed|arena has no room"
+    )
+endif()
+
 echo_add_unit_test(NAME test_emmc_layout
     SOURCES device/test_emmc_layout.c device/fake_disk.c
     LIBRARIES echo_device_logic
