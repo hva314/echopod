@@ -37,6 +37,7 @@ Version 0.12.0 adds seven colour themes, four retro Now Playing faces, `.m4b` au
 | `.m4b` audiobooks with chapters | device | "Chapter N of M" on Now Playing, a chapter list on ≡, the chapter kept in a one-file book's bookmark; no chapter titles yet |
 | QOA playback | device | Mono and stereo, exact seeking, gapless; names from the path, since QOA has no tags |
 | Configurable start screen | sim | Works in the simulator; not yet checked on the player |
+| DOOM | sim | Home → DOOM runs the engine as its own program on the HAL, with controls for the six buttons; on the player it needs a loader and much less RAM first (`docs/doom.md`) |
 
 ## Next
 

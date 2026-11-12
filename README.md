@@ -23,6 +23,7 @@ The hardware knowledge it relies on comes largely from the [ReChord](https://git
 - **Everyday controls:** pause, volume and skip with the screen off, a sleep timer, auto off and a charge screen.
 - **Chinese, Japanese and Korean** names.
 - **Updates itself** from a file copy, and goes back to FiiO's firmware the same way.
+- **DOOM, in the simulator:** put an IWAD in `DOOM/` on the card and Home shows DOOM. It doesn't run on the player yet (`docs/doom.md`).
 
 ## Build and run the simulator (macOS)
 
